@@ -1,7 +1,7 @@
 // キャッシュファイルの指定
 var CACHE_NAME = 'pwa-sample-caches';
 var urlsToCache = [
-    '/koheylux.github.io/',
+    '/koheylux.github.io/samplepwa/',
 ];
 
 // インストール処理
