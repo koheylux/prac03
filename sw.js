@@ -5,8 +5,6 @@ const CACHE_NAME = `${registration.scope}!${CACHE_VERSION}`;
 // キャッシュ対象のファイル
 const CACHE_FILE = [
   '/koheylux.github.io/samplepwa/'
-  '/koheylux.github.io/samplepwa/index.html',
-  '/koheylux.github.io/samplepwa/PoweredByMacOSXLarge.gif',
 ];
 
 
