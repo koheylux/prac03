@@ -1,40 +1,64 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-　　<!-- vue.js　-->
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>ServiceWorker実装</title>
+    <link rel="stylesheet" href="css/locationStyle.css">
     <link rel="manifest" href="manifest.json">
-    <title>PWA Sample</title>
-  </head>
-  
-  <body>
-    <div id="app">
-        <p>{{ message }}</p>
-        <button v-on:click="reverseMessage">Reverse Message</button>
-    </div>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <script async src="https://cdn.jsdelivr.net/npm/pwacompat" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Service Worker Test</h1>
+    <img src="/PoweredByMacOSXLarge.gif">
+
+    <p><button id="clear_cache">キャッシュを削除する</button></p>
+    <p><button id="send_message">メッセージを送信する</button></p>
+    <p><button id="send_push">プッシュ通知を送信する</button></p>
+
+
     <script>
-    // service workerの登録関係
-    if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service_worker.js').then(function(registration) {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }).catch(function(err) {
-        console.log('ServiceWorker registration failed: ', err);
-    });
-    }
-    // vue.jsの設定関係
-    var app = new Vue({
-      el: '#app',
-      data: {
-        message: 'Hello Vue!'
-      },
-      methods: {
-        reverseMessage: function () {
-          this.message = this.message.split('').reverse().join('')
+        // ServiceWorkerの登録
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', { scope: './' })
+            .then(function(reg) {
+                console.log('登録に成功しました。 Scope は ' + reg.scope);
+            }).catch(function(error) {
+                console.log('登録に失敗しました。' + error);
+            });
         }
-      }
-    });
+
+        // キャッシュの削除
+        document.getElementById('clear_cache').addEventListener('click', function() {
+            if ('serviceWorker' in navigator) {
+                if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        message: 'clear'
+                    });
+                } else {
+                    alert('有効化されたService Workerがありません。');
+                }
+            }
+        });
+
+        //メッセージ送信
+        document.getElementById('send_message').addEventListener('click', function() {
+            if ('serviceWorker' in navigator) {
+                if (navigator.serviceWorker.controller) {
+                    const channel = new MessageChannel();
+                    navigator.serviceWorker.controller.postMessage('Hello, world', [channel.port2]);
+                } else {
+                    alert('有効化されたService Workerがありません。');
+                }
+            }
+        });
+
+
     </script>
-  </body>
+
+</body>
+
 </html>
